@@ -1,0 +1,309 @@
+{% extends 'base/base.html' %}
+
+{% block title %}Create Invoice{% endblock %}
+
+{% block content %}
+<div class = "card" style = "margin-top:5px;">
+    <div class = "card-title" style = "padding:2%;">
+        <h3 class = "h3">Create Invoice</h3>
+    </div>
+    <div class = "card-body" id = "main">
+        {% csrf_token %}
+        <div class="form-group">
+          <div class = "row"> 
+                <div class = "col-md">
+                    <label class = "form-control" for="billto">Select Company to bill to</label>
+                </div>
+                <div class = "col-md">
+                    <select class="form-control" name="billto" id="billingCompany">
+                        {% for company in companies %}
+                            <option value="{{company.id}}">{{company.name}}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
+
+        </div>
+        <div id = "d 1">
+            <div class = "row">
+                <div class = "col-md"></div>
+                <div class = "col-md">
+                    <div class = "input-group input-group-outline my-3">
+                        <label class="form-label">Enter Description (Reference Number and Sister Company Details)</label>
+                        <input type="email" class="form-control" id = "formDesc 1">
+                    </div>
+                </div>
+            </div>
+            <form name = "MealForm" id = "1 1">
+                <div class = "row">
+                    <div class ="col-md"></div>
+                    <div class ="col-md"></div>
+                    <div class ="col-md"></div>
+                    <div class ="col-md"></div>
+                    <div class = "col-md">
+                        <div class="input-group input-group-static">
+                            <label>Meal Date</label>
+                            <input type="date" class="form-control">
+                          </div>
+                    </div>
+                </div>
+                <div class = "row">
+                    <div class ="col-md"></div>
+                    <div class ="col-md"></div>
+                    <div class ="col-md"></div>
+                    <div class = "col-md">
+                        <label class = "form-control" for="mealType">Meal Type</label>
+                    </div>
+                    <div class = "col-md">
+                        <select class="form-control" name="mealType" id="mt">
+                            <option value="1">Breakfast</option>
+                            <option value="2">Lunch</option>
+                            <option value="3">Dinner</option>
+                        </select>
+                    </div>
+                </div>
+                <div class = "row">
+                    <div class ="col-md"></div>
+                    <div class ="col-md"></div>
+                    <div class ="col-md"></div>
+                    <div class ="col-md"></div>
+                    <div class = "col-md">
+                        <div class = "input-group input-group-outline my-3">
+                            <label class="form-label">Adults Number</label>
+                            <input type ="number" class="form-control" id = "ad 1">
+                        </div>
+                    </div>
+                </div>
+                <div class = "row">
+                    <div class ="col-md"></div>
+                    <div class ="col-md"></div>
+                    <div class ="col-md"></div>
+                    <div class ="col-md"></div>
+                    <div class = "col-md">
+                        <div class = "input-group input-group-outline my-3">
+                            <label class="form-label">Children</label>
+                            <input type ="number" class="form-control" id = "ch 1">
+                        </div>
+                    </div>
+                </div>
+                <div class = "row">
+                    <div class ="col-md"></div>
+                    <div class ="col-md"></div>
+                    <div class ="col-md"></div>
+                    <div class ="col-md"></div>
+                    <div class = "col-md">
+                        <div class = "input-group input-group-outline my-3">
+                            <label class="form-label">Infants</label>
+                            <input type ="number" class="form-control" id = "inf 1">
+                        </div>
+                    </div>
+                </div>
+                <div class = "row">
+                    <div class ="col-md"></div>
+                    <div class ="col-md"></div>
+                    <div class = "col-md">
+                        <button class="btn btn-icon btn-3 btn-success" id = "save 1 1" onclick = "saveMeal(this.id)">
+                            <span class="btn-inner--icon"><i class="material-icons">save</i></span>
+                        <span class="btn-inner--text">Save</span>
+                        </button>    
+                    </div>
+                </Pdiv>
+                <div class = "row">
+                    <div class ="col-md"></div>
+                    <div class ="col-md"></div>
+                    <div class = "col-md">
+                        <button class="btn btn-icon btn-3 btn-primary" type="button" id = "add 1 2" onclick = "addMeal(this.id)">
+                            <span class="btn-inner--icon"><i class="material-icons">add</i></span>
+                            <span class="btn-inner--text">Add Meal</span>
+                        </button>    
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+        <!-- Generate two checkboxes one for gst and other for gratuity set default ticked -->
+        <div class = "row">
+            <div class = "col-md">
+                <div class="custom-control custom-checkbox mb-3">
+                    <input class="custom-control-input" id="gst" type="checkbox" checked>
+                    <label class="custom-control-label" for="gst">GST</label>
+                </div>
+            </div>
+           
+        </div>
+        <div class = "row">
+            <div class = "col-md">
+                <div class="custom-control custom-checkbox mb-3">
+                    <input class="custom-control-input" id="gratuity" type="checkbox" checked>
+                    <label class="custom-control-label" for="gratuity">Gratuity</label>
+                </div>
+            </div>
+        </div>
+        <button class = "btn btn-primary" id = "desc 2" onclick = "newDesc(this.id)"> Add new Description</button>
+        <button class = "btn btn-primary" onclick = "gi()"> Generate Invoice</button>
+        
+        </div>
+    </div>
+</div>
+
+<script>
+    var br = document.createElement("br");
+    var mealForm = document.getElementsByName("MealForm")[0];
+
+    // add gst and gratuity check 
+
+    var gst = document.getElementById("gst");
+    var gratuity = document.getElementById("gratuity");
+
+    //create a dictionary to store the data
+    var result = {};
+
+    function gi(){
+        var csrf = document.getElementsByName("csrfmiddlewaretoken")[0].value;
+        result['gst'] = gst.checked;
+        result['gratuity'] = gratuity.checked;
+        //write fetch post request
+        fetch(
+            "{% url 'invoice' %}",
+            {
+                method: "POST",
+                headers: {
+                    "X-CSRFToken": csrf,
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(result)
+            }
+        ).then(response => {
+            material.showSwal('success-message')
+        });
+    }
+    function newDesc(id){
+        var id = id.split(" ")[1];
+        var prevDivRef = document.getElementById("d " + (parseInt(id)-1));
+        var newDiv = document.createElement("div");
+        newDiv.setAttribute("id", "d " + id);
+        //get the first div with id row inside prevDivRef
+        var row = prevDivRef.querySelector(".row");
+        //clone the row
+        var newRow = row.cloneNode(true);
+        //inside row change the id of the inpute element 
+        var input = newRow.querySelector("input");
+        input.setAttribute("id", "formDesc " + id);
+        input.disabled = false;
+
+        var mealForm = document.getElementsByName("MealForm")[0];
+        var newMealForm = mealForm.cloneNode(true);
+        newMealForm.setAttribute("id", id + " " + 1);
+        
+        newMealForm.elements[0].value = "";
+        newMealForm.elements[1].value = "";
+        newMealForm.elements[2].value = "";
+        newMealForm.elements[3].value = "";
+        newMealForm.elements[4].value = "";
+
+        newMealForm.elements[0].disabled = false;
+        newMealForm.elements[1].disabled = false;
+        newMealForm.elements[2].disabled = false;
+        newMealForm.elements[3].disabled = false;
+        newMealForm.elements[4].disabled = false;
+
+        //change the id of the save button
+        var saveButton = newMealForm.elements[5];
+        saveButton.id = "save " + id + " " + 1;
+        saveButton.disabled = false;
+
+        //change the id of the add button
+        var addButton = newMealForm.elements[6];
+        addButton.id = "add " + id + " " + 2;
+
+        //append newRow to newDiv
+        newDiv.appendChild(newRow);
+        newDiv.appendChild(newMealForm);
+
+        let parentNode = prevDivRef.parentNode;
+        let buttonNode = document.getElementById("desc "+id);
+        parentNode.insertBefore(newDiv, buttonNode);
+
+        buttonNode.id = "desc " + (parseInt(id) + 1);
+
+
+    }
+
+    function saveMeal(id){
+        var ids =  id.split(" ");
+        console.log(ids);
+        var mealForm = document.getElementById(ids[1]+" "+ids[2]);
+        var mealDate = mealForm.elements[0].value;
+        var mealType = mealForm.elements[1].value;
+        var adults = mealForm.elements[2].value;
+        var children = mealForm.elements[3].value;
+        var infants = mealForm.elements[4].value;
+        var desc = document.getElementById("formDesc "+ ids[1]).value;
+        var billingCompany = document.getElementById("billingCompany").value;
+        var meal = {
+            "mealDate": mealDate,
+            "mealType": mealType,
+            "adults": adults,
+            "children": children,
+            "infants": infants,
+            "desc": desc,
+            "billingCompany": billingCompany
+        }
+        console.log(meal);
+        //check result[desc] if empty create new array of meal
+        //else push meal to array
+        if(result[desc] == null){
+            result[desc] = [];
+            result[desc].push(meal);
+        }else{
+            result[desc].push(meal);
+        }
+        //disable the input elements 
+        mealForm.elements[0].disabled = true;
+        mealForm.elements[1].disabled = true;
+        mealForm.elements[2].disabled = true;
+        mealForm.elements[3].disabled = true;
+        mealForm.elements[4].disabled = true;
+        document.getElementById("formDesc "+ids[1]).disabled = true;
+        document.getElementById("billingCompany").disabled = true;
+
+        //disable save 
+        document.getElementById(id).disabled = true;
+
+        
+    }
+    function addMeal(id){
+        var ids = id.split(" ");
+        var mealForm = document.getElementById(ids[1]+" "+parseInt(ids[2] - 1));
+        var mealFormClone = mealForm.cloneNode(true);
+        mealFormClone.id = ids[1] + " " + ids[2];
+        mealFormClone.elements[0].value = "";
+        mealFormClone.elements[1].value = "";
+        mealFormClone.elements[2].value = "";
+        mealFormClone.elements[3].value = "";
+        mealFormClone.elements[4].value = "";
+
+        mealFormClone.elements[0].disabled = false;
+        mealFormClone.elements[1].disabled = false;
+        mealFormClone.elements[2].disabled = false;
+        mealFormClone.elements[3].disabled = false;
+        mealFormClone.elements[4].disabled = false;
+
+        //change the id of the save button
+        var saveButton = mealFormClone.elements[5];
+        saveButton.id = "save " + ids[1] + " " + ids[2];
+        saveButton.disabled = false;
+
+        //change the id of the add button
+        var addButton = mealFormClone.elements[6];
+        addButton.id = "add " + ids[1] + " " + (parseInt(ids[2])+1);
+        
+        //append mealFormClone to id d 1
+        var div = document.getElementById("d "+ids[1]);
+        div.appendChild(mealFormClone);
+        div.appendChild(br);
+
+    }
+    
+</script>
+{% endblock %}
