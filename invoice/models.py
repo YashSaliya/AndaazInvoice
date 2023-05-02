@@ -27,10 +27,9 @@ class SisterCompanies(models.Model):
         return self.name
 
 class Invoice(models.Model):
-    invoiceNumber = models.IntegerField(auto_created= True, primary_key= True)
+    invoiceNumber = models.AutoField(primary_key= True)
     invoiceDate = models.DateField()
     status = models.BooleanField(default =  False)
-    dueDate = models.DateField()
     amount = models.DecimalField(max_digits=10, decimal_places=4)
     userId = models.ForeignKey(User,on_delete=models.CASCADE)
     mainCompany = models.ForeignKey(MainCompany, on_delete=models.CASCADE)

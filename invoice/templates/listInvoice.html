@@ -1,12 +1,58 @@
 {% extends 'base/base.html' %}
-
-{% block title %}Create Invoice{% endblock %}
+{% load invoice_extras %}
+{% load mathfilters %}
+{% block title %}Invoices{% endblock %}
 
 {% block content %}
 <div class = "card">
     <div class = "card-title" style = "padding:2%;">
         <h3 class = "h3"> Invoices </h3>
     </div>
+
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class = "table align-items-center mb-0">
+                <tr>
+                    <th>
+                        Invoice Number
+                    </th>
+                    <th>
+                        Invoice Date
+                    </th>
+                    <th>
+                        Invoice Amount
+                    </th>
+                    <th>
+                        Invoice Status
+                    </th>
+                    <th>
+                        View Invoice
+                    </th>
+                </tr>
+                {% for invoice in invoices %}
+                <tr>
+                    <td>
+                        {{invoice.invoiceNumber|add:100}}
+                    </td>
+                    <td>
+                        {{invoice.invoiceDate}}
+                    </td>
+                    <td>
+                        {{invoice.amount|floatformat:2}}
+                    </td>
+                    <td>
+                        {{invoice.status|getStringValue}}
+                    </td>
+                    <td>
+                        <a href = "{{invoice.invoiceLink}}"  target="_blank">View Invoice</a>
+                    </td>
+                </tr>
+
+                {% endfor %}
+            </table>
+        </div>
+    </div>
 </div>
+
 
 {% endblock %}

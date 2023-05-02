@@ -1,7 +1,6 @@
 <!-- center image -->
 {% load invoice_extras %}
 {% load mathfilters %}
-{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -16,7 +15,7 @@
 <body>
     <div class = "header"> 
         <div>
-            <img src = "{% static 'material_2_pro_assets/img/small-logos/logo.png'%}">
+            <img src = "https://firebasestorage.googleapis.com/v0/b/andaazinvoice.appspot.com/o/logo.png?alt=media&token=fb90f7e0-d4cd-400e-a41e-7f4c7f75f4ad">
         </div>
         <div style = "margin-left: 30px;">
             Andaaz Indian Cuisine,<br>
@@ -25,7 +24,10 @@
             PhNumber : +1(825)-422-1122
         </div>
     </div>
-
+    <br>
+    <br>
+    <br>
+    <br>
     <hr style = "background-color: rgb(227, 130, 20); height: 3px;">
     <div class = "bto">
         <div style = "margin-right:50px;">
@@ -38,15 +40,15 @@
             </div>
         </div>
         <div >
-            <span style = "font-size:large;font-weight:600;">Date 14th April, 2023</span><br>
-            <span style = "font-size:xx-large;font-weight: 500;">Invoice Number: 145</span>
+            Date {{date}}<br>
+            Invoice Number: {{invoiceNumber}}
         </div>
     </div>
-    <div class = "MD">
+    <div class = "MD" style = "width:100%;">
         <br>
         <br>
-        <div class = "table">
-            <table class="table">
+        <div class = "table" style = "width: 100%;">
+            <table class="table" style = "width:800px;">
                 <thead>
                     <tr>
                         <th scope="col">Description</th>
@@ -111,6 +113,10 @@
         </div>
     </div>
     <style>
+        body{
+            font-family:Arial, Helvetica, sans-serif
+        }
+
         .header{
             display: flex;
             align-items: center;
@@ -138,7 +144,6 @@
             justify-content: center;
             flex-direction: column;
             align-content: space-between;
-            width:50%;
             margin-left: 25%;
         }
     </style>
