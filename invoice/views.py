@@ -45,12 +45,15 @@ def render_to_pdf(template_src, context_dict={}):
     html  = template.render(context_dict)
     result = BytesIO()
     result = HTML(string= html).write_pdf()
-    st = storage.bucket("andaazinvoice.appspot.com")
-    blob = st.blob(f"{context_dict['cmp'].name} {context_dict['date']}--{context_dict['invoiceNumber']}.pdf")
-    blob.upload_from_string(result, content_type='application/pdf')
-    blob.make_public()
-    print(blob.public_url)
-    return blob.public_url
+    try:
+        st = storage.bucket("andaazinvoice.appspot.com")
+        blob = st.blob(f"{context_dict['cmp'].name} {context_dict['date']}--{context_dict['invoiceNumber']}.pdf")
+        blob.upload_from_string(result, content_type='application/pdf')
+        blob.make_public()
+        print(blob.public_url)
+        return blob.public_url
+    except:
+        return render_to_pdf(template_src,context_dict)
 
 
 def calc(data):
@@ -95,8 +98,8 @@ def calc(data):
 
     gst = 0
     gratuity = 0
-    if data['gst'] == "true": gst = temp*18/100
-    if data['gratuity'] == "true":
+    if data['gst']: gst = temp*18/100
+    if data['gratuity']:
         gratuity = temp*10/100
     totalAmount += gst + gratuity
     
