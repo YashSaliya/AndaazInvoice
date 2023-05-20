@@ -13,41 +13,53 @@
     <title>Invoice</title>
 </head>
 <body>
-    <div class = "header"> 
-        <div>
-            <img src = "https://firebasestorage.googleapis.com/v0/b/andaazinvoice.appspot.com/o/logo.png?alt=media&token=fb90f7e0-d4cd-400e-a41e-7f4c7f75f4ad">
-        </div>
-        <div style = "margin-left: 30px;">
-            Andaaz Indian Cuisine,<br>
-            612 Patricia Street,<br>
-            Jasper,adults.BreakfastTOE 1E0<br>
-            PhNumber : +1(825)-422-1122
-        </div>
-    </div>
-    <br>
-    <br>
-    <br>
-    <br>
-    <hr style = "background-color: rgb(227, 130, 20); height: 3px;">
-    <div class = "bto">
-        <div style = "margin-right:50px;">
-            <span style = "font-weight: bolder;">Bill To: <br></span>
-            <div style="margin-left:1%;">
-                {{cmp.name}},<br>
-                {{cmp.address1}},<br>
-                {{cmp.address2}},<br>
-                {{cmp.email}}<br>
+    <div class = "top">
+        <div class = "header"> 
+            <div>
+                <img style = "margin-left:7%;" src = "https://firebasestorage.googleapis.com/v0/b/andaazinvoice.appspot.com/o/logo.png?alt=media&token=fb90f7e0-d4cd-400e-a41e-7f4c7f75f4ad">
+            </div>
+            <div style = "margin-left: 30px;">
+                Andaaz Indian Cuisine,<br>
+                612 Patricia Street,<br>
+                Jasper,TOE 1E0<br>
+                Contact Number- +1(825)-422-1122<br>
+                Email - andaaz@gmail.com<br>
+                <br>
+                <br>
+                <span style = "font-weight: bolder;">Bill To: <br></span>
+                <div style="margin-left:1%;">
+                    {{cmp.name}},<br>
+                    {{cmp.address1}},<br>
+                    {{cmp.address2}},<br>
+                    {{cmp.email}}<br>
+                </div>
             </div>
         </div>
-        <div >
-            Date {{date}}<br>
-            Invoice Number: {{invoiceNumber}}
+        <div class = "header1">
+            <!--Create a bordered table -->
+            <br>
+            <br>
+            <table class="table table-bordered" style = "width: 100%;">
+                <thead>
+                    <tr>
+                        <th scope="col">Invoice Number</th>
+                        <th scope="col">Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <th>{{invoiceNumber}}</th>
+                    <th>{{date}}</th>
+                </tr>
+                </tbody>
+            </table>
         </div>
     </div>
+    <hr style = "background-color: rgb(227, 130, 20); height: 3px; width:100%;">
     <div class = "MD" style = "width:100%;">
         <br>
         <br>
-        <div class = "table" style = "width: 100%;">
+        <div class = "table" style = "width: 80%;">
             <table class="table" style = "width:800px;">
                 <thead>
                     <tr>
@@ -112,17 +124,22 @@
               </table>
         </div>
     </div>
+    GST/HST No. 7 0 4 6 3 4 5 3 4
+    <footer>
+        <div style = "margin-left:auto;">Thank You</div>
+    </footer>
     <style>
+        .top{
+            display:flex;
+            align-content: space-between;
+        }
         body{
             font-family:Arial, Helvetica, sans-serif
         }
 
         .header{
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-direction: column;
             align-content: space-between;
+            flex:3;
             
         }
         img{
@@ -139,12 +156,20 @@
             align-content: space-between;
         }
         .MD{
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-direction: column;
-            align-content: space-between;
-            margin-left: 25%;
+            margin-left: 20px;
+            width: 60%;
+        }
+        .MD table{
+            width: 60%;
+            margin-right:20px;
+        }
+        .top td {
+            border-width: 1px;
+            border-color: rgb(227, 130, 20);
+        }
+        .top th{
+            border-width: 1px;
+            border-color: rgb(227, 130, 20);
         }
     </style>
 </body>

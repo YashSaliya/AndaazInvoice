@@ -11,5 +11,8 @@ urlpatterns = [
     path('editcmp',editcmp,name='editcmp'),
     path('delcmp',delCompany,name ='delcmp'),
     path('ls',listInvoices,name= "listInvoices"),
-    path('logout',lgout,name = 'logout')
+    path('logout',lgout,name = 'logout'),
+    path('testInvoice',testInvoice,name = 'testInvoice'),
+    path('sendmail',sendMail,name = 'sendmail'),
+    path('changeDate',changePaidDate,name='changeDate')
 ]

@@ -174,7 +174,8 @@
                 body: JSON.stringify(result)
             }
         ).then(response => {
-            material.showSwal('success-message')
+            alert('Invoice Generated Successfully !');
+            window.location.href = "{% url 'listInvoices' %}"
         });
     }
     function newDesc(id){
