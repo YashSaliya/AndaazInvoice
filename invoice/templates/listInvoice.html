@@ -1,12 +1,217 @@
 {% extends 'base/base.html' %}
-
-{% block title %}Create Invoice{% endblock %}
+{% load invoice_extras %}
+{% load mathfilters %}
+{% block title %}Invoices{% endblock %}
 
 {% block content %}
 <div class = "card">
     <div class = "card-title" style = "padding:2%;">
         <h3 class = "h3"> Invoices </h3>
     </div>
+
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class = "table align-items-center mb-0">
+                <tr>
+                    <th>
+                        Invoice Number
+                    </th>
+                    <th>
+                        Invoice Creation Date
+                    </th>
+                    <th>
+                        Invoice Due Date
+                    </th>
+                    <th>
+                        Invoice Amount
+                    </th>
+                    <th>
+                        Invoice Status
+                    </th>
+                    <th>
+                        Invoice Paid Date
+                    </th>
+                    <th>
+                        View Invoice
+                    </th>
+                    <th>
+                        Action
+                    </th>
+                </tr>
+                {% for invoice in invoices %}
+                <tr>
+                    <td>
+                        {{invoice.invoiceNumber|add:100}}
+                    </td>
+                    <td>
+                        {{invoice.invoiceDate}}
+                    </td>
+                    <td>
+                        {{invoice.invoiceDueDate}}
+                    </td>
+                    <td>
+                        {{invoice.amount|floatformat:2}}
+                    </td>
+                    <td>
+                        {% if invoice.status %}
+                            {{invoice.status|getStringValue}}
+                            {% else %}
+                            <button class = "btn btn-primary" data-bs-toggle="modal" data-bs-target="#paidDate" onclick = "selectInv('{{invoice.invoiceNumber}}')"> Change status to paid </button>
+                        {% endif %}  
+                    </td>
+                    <td>
+                        {{invoice.invoicePaidDate}}
+                    </td>
+                    <td>
+                        <a href = "{{invoice.invoiceLink}}"  target="_blank">View Invoice</a>
+                    </td>
+                    <td>
+                        {% if invoice.mailSent %}
+                            Mail Sent
+                            {% else %}
+                            <button class = "btn btn-primary" data-bs-toggle="modal" data-bs-target="#mailmessage" onclick = "selectInv('{{invoice.invoiceNumber}}')"> Send Mail </button>
+                        {% endif %}
+                    </td>
+                </tr>
+
+                {% endfor %}
+            </table>
+        </div>
+    </div>
 </div>
 
+<div class="modal fade" id = 'paidDate' tabindex="-1" role="dialog" aria-labelledby="exampleModalSignTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-sm" role="document">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h6 class="modal-title font-weight-normal" id="modal-title-default">Company Details</h6>
+            <button type="button" class="btn-close text-dark" data-bs-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">×</span>
+            </button>
+        </div>
+        <div class="modal-body p-0">
+        <div class="card card-plain">
+            <div class="card-body pb-3">
+            <form role="form text-left">
+                <div class="input-group input-group-static my-3">
+                    <label>Paid Date</label>
+                    <input type="date" class="form-control" id = "datepaid">
+                </div>
+            </form>
+            </div>
+        </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn bg-gradient-primary" onclick="saveDate()">Save changes</button>
+            <button type="button" class="btn btn-link  ml-auto" data-bs-dismiss="modal">Close</button>
+        </div>
+    </div>
+    
+    </div>
+</div>
+
+<div class="modal fade" id = 'mailmessage' tabindex="-1" role="dialog" aria-labelledby="exampleModalSignTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-sm" role="document">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h6 class="modal-title font-weight-normal" id="modal-title-default">Company Details</h6>
+            <button type="button" class="btn-close text-dark" data-bs-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">×</span>
+            </button>
+        </div>
+        <div class="modal-body p-0">
+        <div class="card card-plain">
+            <div class="card-body pb-3">
+            <form role="form text-left">
+                <div class="input-group input-group-static my-3">
+                    <label>Subject</label>
+                    <input class="form-control" id = "subject">
+                </div>
+                <div class="input-group input-group-static my-3">
+                    <label>Body</label>
+                    <textarea class="form-control" rows="3" id = "body" ></textarea>
+                </div>
+            </form>
+            </div>
+        </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn bg-gradient-primary" onclick="sendmail()">Save changes</button>
+            <button type="button" class="btn btn-link  ml-auto" data-bs-dismiss="modal">Close</button>
+        </div>
+    </div>
+    
+    </div>
+</div>
+
+
+<script>
+    selectedInvoice = -1;
+    function  selectInv(invNumber){
+        invNumber = parseInt(invNumber);
+        selectedInvoice = invNumber;
+    }
+    function getCookie(name){
+    var cookieValue = null;
+    if(document.cookie && document.cookie !== ''){
+      var cookies = document.cookie.split(';');
+      for(var i = 0; i < cookies.length; i++){
+        var cookie = cookies[i].trim();
+        if(cookie.substring(0, name.length + 1) === (name + '=')){
+          cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+          break;
+        }
+      }
+    }
+    return cookieValue;
+  }
+
+    function saveDate(){
+        paidDate = document.getElementById('datepaid').value;
+        if(paidDate == ''){
+            alert('Please select a date');
+            return;
+        }
+        paidDate = paidDate.split('-');
+        paidDate = paidDate[2] + '-' + paidDate[1] + '-' + paidDate[0];
+        newData = {'id':selectedInvoice,'paidDate':paidDate}
+        fetch(
+        "{% url 'changeDate' %}"
+        ,{
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCookie('csrftoken'),
+            },
+            body: JSON.stringify(newData)
+        }
+        )
+        .then(response => window.location.reload());
+    }
+
+    function sendmail(){
+        subject = document.getElementById('subject').value;
+        body = document.getElementById('body').value;
+        if(subject == '' || body == ''){
+            alert('Please enter a subject and body');
+            return;
+        }
+        var mail = {'id':selectedInvoice,'subject':subject,'body':body};
+        fetch(
+            "{% url 'sendmail' %}"
+            ,{
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': getCookie('csrftoken'),
+                },
+                body: JSON.stringify(mail)
+            }
+        ).then((response=> {
+            alert("Mail Sent");
+            window.location.reload();
+        }));
+    }
+
+</script>
 {% endblock %}

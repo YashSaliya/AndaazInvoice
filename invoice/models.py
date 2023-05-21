@@ -13,7 +13,7 @@ class MainCompany(models.Model):
     website = models.CharField(max_length = 100,blank=True)
     user = models.ForeignKey(User,on_delete=models.CASCADE)
     def __str__(self):
-        return self.name 
+        return self.name
 
 class SisterCompanies(models.Model):
     main_company = models.ForeignKey(MainCompany, on_delete=models.CASCADE)
@@ -27,14 +27,18 @@ class SisterCompanies(models.Model):
         return self.name
 
 class Invoice(models.Model):
-    invoiceNumber = models.IntegerField(auto_created= True, primary_key= True)
+    invoiceNumber = models.AutoField(primary_key= True)
     invoiceDate = models.DateField()
     status = models.BooleanField(default =  False)
-    dueDate = models.DateField()
     amount = models.DecimalField(max_digits=10, decimal_places=4)
     userId = models.ForeignKey(User,on_delete=models.CASCADE)
     mainCompany = models.ForeignKey(MainCompany, on_delete=models.CASCADE)
     invoiceLink = models.CharField(max_length=2000,blank = True)
+    invoiceDueDate =  models.DateField(blank = True,null=True)
+    invoicePaidDate = models.DateField(blank = True,null = True)
+    mailSent = models.BooleanField(default = False)
+    def __str__(self):
+        return f'{self.invoiceNumber} : {self.amount}'
 
 
 class Prices(models.Model):
