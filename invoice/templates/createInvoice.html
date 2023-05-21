@@ -70,7 +70,7 @@
                     <div class = "col-md">
                         <div class = "input-group input-group-outline my-3">
                             <label class="form-label">Adults Number</label>
-                            <input type ="number" class="form-control" id = "ad 1">
+                            <input type ="number" class="form-control" id = "ad 1" value = 0>
                         </div>
                     </div>
                 </div>
@@ -82,7 +82,7 @@
                     <div class = "col-md">
                         <div class = "input-group input-group-outline my-3">
                             <label class="form-label">Children</label>
-                            <input type ="number" class="form-control" id = "ch 1">
+                            <input type ="number" class="form-control" id = "ch 1" value = 0>
                         </div>
                     </div>
                 </div>
@@ -94,7 +94,7 @@
                     <div class = "col-md">
                         <div class = "input-group input-group-outline my-3">
                             <label class="form-label">Infants</label>
-                            <input type ="number" class="form-control" id = "inf 1">
+                            <input type ="number" class="form-control" id = "inf 1" value = 0>
                         </div>
                     </div>
                 </div>
@@ -123,20 +123,26 @@
     </div>
         <!-- Generate two checkboxes one for gst and other for gratuity set default ticked -->
         <div class = "row">
-            <div class = "col-md">
+            <div class = "col-sm">
                 <div class="custom-control custom-checkbox mb-3">
-                    <input class="custom-control-input" id="gst" type="checkbox">
-                    <label class="custom-control-label" for="gst">GST</label>
-                </div>
+                    <input class="custom-control-input" id="gst" type="checkbox" onchange="disen(this.id)">
+                    <label class="custom-control-label" for="gst">GST (in % )</label>
+                </div>               
+            </div>
+            <div class = "col-sm">
+                <input class = "form-control" id = "gstvalue"  value = "0" type = "number" disabled> </input>
             </div>
            
         </div>
         <div class = "row">
             <div class = "col-md">
                 <div class="custom-control custom-checkbox mb-3">
-                    <input class="custom-control-input" id="gratuity" type="checkbox">
-                    <label class="custom-control-label" for="gratuity">Gratuity</label>
+                    <input class="custom-control-input" id="gratuity" type="checkbox" onchange="disen(this.id)">
+                    <label class="custom-control-label" for="gratuity">Gratuity (in % )</label>
                 </div>
+            </div>
+            <div class = "col-sm">
+                <input class = "form-control" id = "gratuityvalue"  value = "0" type = "number" disabled> </input>
             </div>
         </div>
         <button class = "btn btn-primary" id = "desc 2" onclick = "newDesc(this.id)"> Add new Description</button>
@@ -158,10 +164,24 @@
     //create a dictionary to store the data
     var result = {};
 
+    function disen(id){
+        x = null;
+        if(id == "gst"){
+            x = document.getElementById('gstvalue');
+        }
+        else{
+            x=  document.getElementById('gratuityvalue')
+        }
+        x.disabled = !x.disabled;
+        if(x.disabled){
+            x.value = 0;
+        }
+    }
+
     function gi(){
         var csrf = document.getElementsByName("csrfmiddlewaretoken")[0].value;
-        result['gst'] = gst.checked;
-        result['gratuity'] = gratuity.checked;
+        result['gst'] = document.getElementById('gstvalue').value;
+        result['gratuity'] = document.getElementById('gratuityvalue').value;
         //write fetch post request
         fetch(
             "{% url 'invoice' %}",

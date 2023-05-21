@@ -111,11 +111,8 @@ def calc(data):
             meal['infants'] = int(meal['infants'])
     temp = totalAmount
 
-    gst = 0
-    gratuity = 0
-    if data['gst']: gst = temp*18/100
-    if data['gratuity']:
-        gratuity = temp*10/100
+    gst = temp * (int(data['gst'])) / 100
+    gratuity = temp * (int(data['gratuity'])) / 100
     totalAmount += gst + gratuity
     
     chargesData = {'GST':gst,'Gratuity':gratuity,'Total Amount':totalAmount}
@@ -182,8 +179,8 @@ def createInvoice(request):
 
 def loginrequest(request):
     if request.method == "POST":
-        username = request.POST['username']
-        password = request.POST['password']
+        username = request.POST['username'].strip()
+        password = request.POST['password'].strip()
         user = authenticate(request,username = username,password = password)
         if user:
             login(request,user)
@@ -323,6 +320,7 @@ def testInvoice(request):
 
 
 
+@login_required(login_url='/login')
 def sendMail(request):
     from django.core.mail import send_mail,EmailMessage
     # send_mail("Subject",'message','yashsaliya2002@gmail.com',['yashsaliya2002@gmail.com'],fail_silently=False)
@@ -348,7 +346,7 @@ def sendMail(request):
         
     return HttpResponse("Hello")
 
-
+@login_required(login_url='/login')
 def changePaidDate(request):
     if request.method == "POST":
         data = json.loads(request.body)
