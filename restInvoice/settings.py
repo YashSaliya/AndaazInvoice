@@ -72,9 +72,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = "restInvoice.wsgi.application"
-
-
+WSGI_APPLICATION = 'vercel_app.wsgi.app'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 

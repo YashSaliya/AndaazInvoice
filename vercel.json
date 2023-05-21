@@ -1,14 +1,14 @@
 {
-        "builds": [
-          {
-            "src": "restInvoice/wsgi.py",
-            "use": "@vercel/python"
-          }
-        ],
-        "routes": [
-          {
-            "src": "/(.*)",
-            "dest": "restInvoice/wsgi.py"
-          }
-        ]
-    }
+    "builds": [
+        {
+            "src": "restInvoice/wsgi.py",
+            "use": "@vercel/python"
+        }
+    ],
+    "routes": [
+        {
+            "src": "/(.*)",
+            "dest": "restInvoice/wsgi.py"
+        }
+    ]
+}
