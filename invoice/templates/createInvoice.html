@@ -10,7 +10,7 @@
     <div class = "card-body" id = "main">
         {% csrf_token %}
         <div class="form-group">
-          <div class = "row"> 
+          <div class = "row">
                 <div class = "col-md">
                     <label class = "form-control" for="billto">Select Company to bill to</label>
                 </div>
@@ -105,7 +105,7 @@
                         <button class="btn btn-icon btn-3 btn-success" id = "save 1 1" onclick = "saveMeal(this.id)">
                             <span class="btn-inner--icon"><i class="material-icons">save</i></span>
                         <span class="btn-inner--text">Save</span>
-                        </button>    
+                        </button>
                     </div>
                 </Pdiv>
                 <div class = "row">
@@ -115,7 +115,7 @@
                         <button class="btn btn-icon btn-3 btn-primary" type="button" id = "add 1 2" onclick = "addMeal(this.id)">
                             <span class="btn-inner--icon"><i class="material-icons">add</i></span>
                             <span class="btn-inner--text">Add Meal</span>
-                        </button>    
+                        </button>
                     </div>
                 </div>
             </form>
@@ -127,12 +127,12 @@
                 <div class="custom-control custom-checkbox mb-3">
                     <input class="custom-control-input" id="gst" type="checkbox" onchange="disen(this.id)">
                     <label class="custom-control-label" for="gst">GST (in % )</label>
-                </div>               
+                </div>
             </div>
             <div class = "col-sm">
                 <input class = "form-control" id = "gstvalue"  value = "0" type = "number" disabled> </input>
             </div>
-           
+
         </div>
         <div class = "row">
             <div class = "col-md">
@@ -147,7 +147,7 @@
         </div>
         <button class = "btn btn-primary" id = "desc 2" onclick = "newDesc(this.id)"> Add new Description</button>
         <button class = "btn btn-primary" onclick = "gi()"> Generate Invoice</button>
-        
+
         </div>
     </div>
 </div>
@@ -156,7 +156,7 @@
     var br = document.createElement("br");
     var mealForm = document.getElementsByName("MealForm")[0];
 
-    // add gst and gratuity check 
+    // add gst and gratuity check
 
     var gst = document.getElementById("gst");
     var gratuity = document.getElementById("gratuity");
@@ -207,7 +207,7 @@
         var row = prevDivRef.querySelector(".row");
         //clone the row
         var newRow = row.cloneNode(true);
-        //inside row change the id of the inpute element 
+        //inside row change the id of the inpute element
         var input = newRow.querySelector("input");
         input.setAttribute("id", "formDesc " + id);
         input.disabled = false;
@@ -215,12 +215,12 @@
         var mealForm = document.getElementsByName("MealForm")[0];
         var newMealForm = mealForm.cloneNode(true);
         newMealForm.setAttribute("id", id + " " + 1);
-        
+
         newMealForm.elements[0].value = "";
-        newMealForm.elements[1].value = "";
-        newMealForm.elements[2].value = "";
-        newMealForm.elements[3].value = "";
-        newMealForm.elements[4].value = "";
+        newMealForm.elements[1].value = "1";
+        newMealForm.elements[2].value = "1";
+        newMealForm.elements[3].value = "1";
+        newMealForm.elements[4].value = "1";
 
         newMealForm.elements[0].disabled = false;
         newMealForm.elements[1].disabled = false;
@@ -279,7 +279,7 @@
         }else{
             result[desc].push(meal);
         }
-        //disable the input elements 
+        //disable the input elements
         mealForm.elements[0].disabled = true;
         mealForm.elements[1].disabled = true;
         mealForm.elements[2].disabled = true;
@@ -288,21 +288,22 @@
         document.getElementById("formDesc "+ids[1]).disabled = true;
         document.getElementById("billingCompany").disabled = true;
 
-        //disable save 
+        //disable save
         document.getElementById(id).disabled = true;
 
-        
+
     }
     function addMeal(id){
+
         var ids = id.split(" ");
         var mealForm = document.getElementById(ids[1]+" "+parseInt(ids[2] - 1));
         var mealFormClone = mealForm.cloneNode(true);
         mealFormClone.id = ids[1] + " " + ids[2];
         mealFormClone.elements[0].value = "";
-        mealFormClone.elements[1].value = "";
-        mealFormClone.elements[2].value = "";
-        mealFormClone.elements[3].value = "";
-        mealFormClone.elements[4].value = "";
+        mealFormClone.elements[1].value = "1";
+        mealFormClone.elements[2].value = "0";
+        mealFormClone.elements[3].value = "0";
+        mealFormClone.elements[4].value = "0";
 
         mealFormClone.elements[0].disabled = false;
         mealFormClone.elements[1].disabled = false;
@@ -318,13 +319,14 @@
         //change the id of the add button
         var addButton = mealFormClone.elements[6];
         addButton.id = "add " + ids[1] + " " + (parseInt(ids[2])+1);
-        
+
         //append mealFormClone to id d 1
         var div = document.getElementById("d "+ids[1]);
         div.appendChild(mealFormClone);
         div.appendChild(br);
+        document.getElementById(id).disabled = true;
 
     }
-    
+
 </script>
 {% endblock %}

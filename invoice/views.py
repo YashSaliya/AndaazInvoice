@@ -4,7 +4,7 @@ from django.http import HttpResponse
 from django.http import JsonResponse
 import json
 from django.views.decorators.csrf import csrf_exempt
-from django.contrib import messages 
+from django.contrib import messages
 from django.shortcuts import redirect
 import firebase_admin
 from io import BytesIO
@@ -20,10 +20,22 @@ from django.contrib.auth.decorators import login_required
 import requests
 from restInvoice.settings import *
 #create credential instance
-cred = firebase_admin.credentials.Certificate("andaazinvoice-firebase-adminsdk-10x6t-07a767ba18.json")
+cred = firebase_admin.credentials.Certificate({
+  "type": "service_account",
+  "project_id": "andaazinvoice",
+  "private_key_id": "07a767ba180bdb3a2d1aa4deddabffa3e21ea41c",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQCl8OQA7MzHNUm0\nkKoCgCQvIVBbrTf/slbED0vn3y5yxOoy4J5YNOMcom0VCAOUXuHK4UvcrzZGcZow\nPVRcEp4QAZTiSE5jP/Hl7fXVbT3DNMt6u/V0jt97KnYd8D9ayvA1JBC+oxDVhBjv\nk9V7/NZlQhRCLQWxURJY9lCm+JViQLvxPDfQLhFpRnpqGPTO8qW+swbYCNm6k7Aa\nD+d7u5ydVLuQWtvMjqzB6t0PrKLP7g2+2pazgsGFr2voKbUDYbpA9dhunM8gtPML\njVPuumwmSQHucsMFLH81T+PWRC3Ud+7wM9YPaPVmI+ga3w+0RcfCNShYTXvA4i0J\ny5zaflJdAgMBAAECggEAQbhHXLRsH8NThw86PdZJPl83x68xO/QCGBEk01bZOvwQ\n8whxveZoQil0AT3UyRjQ3Pxggqzj1n9cfRl1BSgccKNntzzCyt0C7TjSwW3L5blN\nkzTIsBp7mPiGojHJrags/Sbk+NN1MdLo202V4c6PjLfgdRsGo6TDmvcmlxJhe3Ea\ngLe4Y/+Sxt50WnQ1/pEdMFidGc+DZEvYBC5qz2CLJvYV7bGe44tt9Sz9kGeOLbMa\nGYCtLwCCOFJC+xD7n9+Qj/qP2ZXCSGV4JjNJQ5lWWnDJKMGCHijn0TBmZztqv764\n7fQbVR8cb5XEcvPYiswEra9kfBnD3g3t0SIaRuVMswKBgQDnigF8uhdwTFPNbsEG\nekJwpfTCTHmNJmQ8VN2qDvzbifEqhJIjPZ7FBl8gUgCIUaU+9icR8DMh6HT4BYcn\nPoYbz5ojqHax+SWS6VKymX8YZgsQ8LnZTRbTPtl9ydgY9uieNRafVhOtAFKC0jaf\niYiGn3y+sE1DSNzf5tnshBZi0wKBgQC3eMdK84dXZbcTfT5zSWYksyLdxeiJsnAZ\n8UUWmdmpB5Sd1evqlkMhJPAU1++1drY15CCrxPxglgxYThVO7ZXeQFPuSzXDTP4j\nD2Qp7qKtbERHAtq4Ql06cDMliHnt7LMqb5o0hvVPWqpw9aDGTepKD0ZSBQG+pvsK\nQ7b+qjJYDwKBgGCWXnZ0ftCW1qKtIBKer9akNE1Vb6NlL41HbczCQdMnYRZ2hSv0\nSaYxOT+XVaeIP6HbN4MxK3NqsFjCnZXObE1vtgJIBXPK1lTJxnjAtZctAlLHyQ+Q\nLARlhH8H04Dehz1wMga39q9FoiX2oVi+G9jk8Tnu+9wkqhcxCxmyJFCHAoGAb0Fp\nMHUehAvlCYdwID7JFsYeBXemfCFdQw4ARCVFTO+Q2mlHZvh5epbIkwsii9qRwXo1\nqZOJKxSyJbYry7HcqGo/uweWcXi1vxLtPVQ9B4bYnGsJsKRlnjM9gKwSrAlV2AzW\n6LVR+i3Tny4DsVy8Du7WSJRKq47cOiw3wpP4dVcCgYBHiMeUCCgjrfqqInWTSbx6\nastLqsEu7OZgWvMqDFmR5tCNRctJucXys8ZolG3HXOQI6pQkWNV/MvjNP5elsOXc\n6s18h1ASm2/ak+kX9l1z0t8TxR3lrB42YIl7AhNGyNTs87lI+NHQ0H6zZmb18dCM\nmxeLqXNpCKiSGnS0M0PXqQ==\n-----END PRIVATE KEY-----\n",
+  "client_email": "firebase-adminsdk-10x6t@andaazinvoice.iam.gserviceaccount.com",
+  "client_id": "111329267315882162827",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-10x6t%40andaazinvoice.iam.gserviceaccount.com"
+}
+)
 firebase_admin.initialize_app(cred)
 
-test_data = '{"gst":"false","gratuity":"false","2313":[{"mealDate":"2023-04-07","mealType":"1","adults":"2","children":"2","infants":"2","desc":"2313","billingCompany":"7"},{"mealDate":"2023-04-20","mealType":"","adults":"2","children":"2","infants":"2","desc":"2313","billingCompany":"7"}],"2313 ads":[{"mealDate":"2023-04-13","mealType":"","adults":"2","children":"2","infants":"2","desc":"2313 ads","billingCompany":"7"}]}'
+test_data = '{"gst":"18","gratuity":"12","2313":[{"mealDate":"2023-04-07","mealType":"1","adults":"2","children":"2","infants":"2","desc":"2313","billingCompany":"7"},{"mealDate":"2023-04-20","mealType":"","adults":"2","children":"2","infants":"2","desc":"2313","billingCompany":"7"}],"2313 ads":[{"mealDate":"2023-04-13","mealType":"","adults":"2","children":"2","infants":"2","desc":"2313 ads","billingCompany":"7"}]}'
 
 @login_required(login_url='/login')
 def updateMealDetails(request):
@@ -114,7 +126,7 @@ def calc(data):
     gst = temp * (int(data['gst'])) / 100
     gratuity = temp * (int(data['gratuity'])) / 100
     totalAmount += gst + gratuity
-    
+
     chargesData = {'GST':gst,'Gratuity':gratuity,'Total Amount':totalAmount}
     del(data['gst'])
     del(data['gratuity'])
@@ -165,7 +177,7 @@ def createInvoice(request):
         invoice = Invoice()
         invoice.amount = renderedData['Total Amount']
         invoice.invoiceDate = datetime.datetime.now()
-        invoice.userId = User.objects.all()[0]
+        invoice.userId = request.user
         invoice.mainCompany = cmp
         invoice.save()
         invoiceNumber = invoice.invoiceNumber + 100
@@ -228,7 +240,7 @@ def cmpDetails(request,cmpId):
     )
 
 def listInvoices(request):
-    invoices = Invoice.objects.filter(userId = User.objects.all()[0])
+    invoices = Invoice.objects.filter(userId = request.user.id).order_by('-invoiceDate')
     return render(request,'listInvoice.html',context = {"invoices":invoices})
 
 
@@ -334,16 +346,16 @@ def sendMail(request):
         # fetch pdf from url and prepare an email message and attach the file fetched to the mail
         response = requests.get(urlInvoice,stream = True)
         # prepare emailmessage
-        # get host name from settings 
+        # get host name from settings
         host = EMAIL_HOST_USER
-        # get maincompany from invoice 
+        # get maincompany from invoice
         maincompany =  invoice.mainCompany.email
         message = EmailMessage(subject,body,host,[maincompany])
         message.attach("invoice.pdf",response.content)
         message.send(fail_silently=False)
         invoice.mailSent = True
         invoice.save()
-        
+
     return HttpResponse("Hello")
 
 @login_required(login_url='/login')
